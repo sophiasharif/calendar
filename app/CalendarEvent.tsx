@@ -3,12 +3,27 @@ import { Event } from "@/utils/types";
 
 interface CalendarColumnProps {
   event: Event;
+  startTime: number;
+  endTime: number;
 }
 
-export default function CalendarEvent({ event }: CalendarColumnProps) {
+export default function CalendarEvent({
+  event,
+  startTime,
+  endTime,
+}: CalendarColumnProps) {
+  const eventStartHour =
+    event.startTime.getHours() + event.startTime.getMinutes() / 60;
+  const eventEndHour =
+    event.endTime.getHours() + event.endTime.getMinutes() / 60;
+  const topOffset =
+    ((eventStartHour - startTime) / (endTime - startTime)) * 100;
+  const length =
+    ((eventEndHour - eventStartHour) / (endTime - startTime)) * 100;
+
   const style = {
-    top: `${(event.rowStart / 10) * 100}%`,
-    height: `${((event.rowEnd - event.rowStart) / 10) * 100}%`,
+    top: `${topOffset}%`,
+    height: `${length}%`,
     width: "100%",
   };
 

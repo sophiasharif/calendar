@@ -1,5 +1,6 @@
 import styles from "./CalendarEvent.module.css";
 import { Event } from "@/utils/types";
+import { useDrag } from "react-dnd";
 
 interface CalendarColumnProps {
   event: Event;
@@ -12,6 +13,13 @@ export default function CalendarEvent({
   startTime,
   endTime,
 }: CalendarColumnProps) {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "event",
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
+
   const eventStartHour =
     event.startTime.getHours() + event.startTime.getMinutes() / 60;
   const eventEndHour =
@@ -27,7 +35,11 @@ export default function CalendarEvent({
   };
 
   return (
-    <div className={styles.calendarEvent} style={style}>
+    <div
+      className={styles.calendarEvent}
+      style={{ ...style, border: isDragging ? "5px solid pink" : "0px" }}
+      ref={drag}
+    >
       <h1>{event.title}</h1>
       <h5>
         {eventStartHour} - {eventEndHour}

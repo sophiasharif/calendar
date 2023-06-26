@@ -1,3 +1,7 @@
+.calendarView {
+  display: flex;
+}
+
 .calendarColumn {
   display: grid;
   gap: 1px;

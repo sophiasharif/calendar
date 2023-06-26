@@ -1,5 +1,4 @@
-import CalendarColumn from "./CalendarColumn";
-import TimeColumn from "./TimeColumn";
+import DayView from "./DayView";
 import styles from "./page.module.css";
 import { Event } from "@/utils/types";
 
@@ -21,10 +20,7 @@ const events: Event[] = [
 export default function Home() {
   return (
     <main className={styles.main}>
-      <div className={styles.calendarView}>
-        <TimeColumn startTime={6} endTime={19} />
-        <CalendarColumn events={events} startTime={6} endTime={19} />
-      </div>
+      <DayView events={events} startTime={6} endTime={19} />
     </main>
   );
 }

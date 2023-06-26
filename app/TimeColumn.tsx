@@ -7,11 +7,7 @@ interface TimeColumnProps {
 }
 
 function getDisplayTime(hour: number) {
-  if (hour < 12) {
-    return `${hour} AM`;
-  } else {
-    return `${hour} PM`;
-  }
+  return hour < 12 ? `${hour} AM` : `${hour} PM`;
 }
 
 export default function TimeColumn({ startTime, endTime }: TimeColumnProps) {

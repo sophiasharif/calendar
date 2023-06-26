@@ -7,8 +7,9 @@ interface CalendarColumnProps {
 
 export default function CalendarEvent({ event }: CalendarColumnProps) {
   const style = {
-    gridRowStart: event.rowStart,
-    gridRowEnd: event.rowEnd,
+    top: `${(event.rowStart / 10) * 100}%`,
+    height: `${((event.rowEnd - event.rowStart) / 10) * 100}%`,
+    width: "100%",
   };
 
   return (

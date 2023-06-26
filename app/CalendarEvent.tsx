@@ -15,6 +15,7 @@ export default function CalendarEvent({
 }: CalendarColumnProps) {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: "event",
+    item: { id: event.id },
     collect: (monitor) => ({
       isDragging: !!monitor.isDragging(),
     }),
@@ -37,7 +38,7 @@ export default function CalendarEvent({
   return (
     <div
       className={styles.calendarEvent}
-      style={{ ...style, border: isDragging ? "5px solid pink" : "0px" }}
+      style={{ ...style, border: isDragging ? "3px solid white" : "0px" }}
       ref={drag}
     >
       <h1>{event.title}</h1>

@@ -25,3 +25,17 @@
 .gridCell:first-child::before {
   border-top: none;
 }
+
+.timeColumn {
+  display: grid;
+  gap: 1px;
+  padding-right: 5px;
+  background: var(--sub-alt-color);
+  width: 50px;
+  position: relative;
+  align-items: center;
+  justify-items: right;
+  align-content: center;
+  color: var(--sub-color);
+  font-size: 12px;
+}

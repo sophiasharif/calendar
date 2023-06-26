@@ -1,6 +1,7 @@
 import styles from "./CalendarColumn.module.css";
 import CalendarEvent from "./CalendarEvent";
 import { Event } from "@/utils/types";
+import { HOUR_HEIGHT } from "@/utils/globals";
 
 interface CalendarColumnProps {
   events: Event[];
@@ -16,7 +17,7 @@ export default function CalendarColumn({
   const numRows = endTime - startTime;
   const rows = new Array(numRows).fill(0); // array to render grid styling
   const gridStyling = {
-    gridTemplateRows: `repeat(${numRows}, 80px)`,
+    gridTemplateRows: `repeat(${numRows}, ${HOUR_HEIGHT}px)`,
   };
   return (
     <div className={styles.calendarColumn} style={gridStyling}>

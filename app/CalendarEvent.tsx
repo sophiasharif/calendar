@@ -24,12 +24,14 @@ export default function CalendarEvent({
   const style = {
     top: `${topOffset}%`,
     height: `${length}%`,
-    width: "100%",
   };
 
   return (
     <div className={styles.calendarEvent} style={style}>
       <h1>{event.title}</h1>
+      <h5>
+        {eventStartHour} - {eventEndHour}
+      </h5>
       <p>Event Description</p>
     </div>
   );

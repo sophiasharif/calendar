@@ -4,6 +4,8 @@
   border-radius: 1rem;
   padding: 1rem;
   position: absolute;
+  width: 92%;
+  margin-left: 5%;
 }
 
 .calendarEvent h1 {

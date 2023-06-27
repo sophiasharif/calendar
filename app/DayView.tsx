@@ -1,8 +1,7 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { DndProvider, useDrop } from "react-dnd";
+import { DndProvider, useDrop, useDrag } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
-import CalendarEvent from "./CalendarEvent";
 import styles from "./DayView.module.css";
 import { Event } from "@/utils/types";
 import { HOUR_HEIGHT } from "@/utils/globals";
@@ -30,6 +29,12 @@ interface GridCellProps {
   startTime: number;
   endTime: number;
   moveEvent: (id: number, newStartHour: number) => void;
+}
+
+interface CalendarEventProps {
+  event: Event;
+  startTime: number;
+  endTime: number;
 }
 
 function GridCell({ id, startTime, endTime, moveEvent }: GridCellProps) {
@@ -94,6 +99,43 @@ function CurrentTimeIndicator({ startTime, endTime }: TimeColumnProps) {
         backgroundColor: "red",
       }}
     />
+  );
+}
+
+function CalendarEvent({ event, startTime, endTime }: CalendarEventProps) {
+  const [{ isDragging }, drag] = useDrag(() => ({
+    type: "event",
+    item: { id: event.id },
+    collect: (monitor) => ({
+      isDragging: !!monitor.isDragging(),
+    }),
+  }));
+
+  const eventStartHour =
+    event.startTime.getHours() + event.startTime.getMinutes() / 60;
+  const eventEndHour =
+    event.endTime.getHours() + event.endTime.getMinutes() / 60;
+  const topOffset =
+    ((eventStartHour - startTime) / (endTime - startTime)) * 100;
+  const length =
+    ((eventEndHour - eventStartHour) / (endTime - startTime)) * 100;
+
+  const style: React.CSSProperties = {
+    top: `${topOffset}%`,
+    height: `${length}%`,
+    border: isDragging ? "3px solid white" : "0px",
+    pointerEvents: isDragging ? "none" : "auto",
+    opacity: isDragging ? 0.7 : 1,
+  };
+
+  return (
+    <div className={styles.calendarEvent} style={style} ref={drag}>
+      <h1>{event.title}</h1>
+      <h5>
+        {eventStartHour} - {eventEndHour}
+      </h5>
+      <p>Event Description</p>
+    </div>
   );
 }
 
@@ -173,14 +215,16 @@ export default function DayView({ events, startTime, endTime }: DayViewProps) {
 
   return (
     <DndProvider backend={HTML5Backend}>
-      <div className={styles.calendarView}>
-        <TimeColumn startTime={startTime} endTime={endTime} />
-        <CalendarColumn
-          events={events}
-          startTime={startTime}
-          endTime={endTime}
-          moveEvent={moveEvent}
-        />
+      <div className={styles.wrapper}>
+        <div className={styles.calendarView}>
+          <TimeColumn startTime={startTime} endTime={endTime} />
+          <CalendarColumn
+            events={events}
+            startTime={startTime}
+            endTime={endTime}
+            moveEvent={moveEvent}
+          />
+        </div>
       </div>
     </DndProvider>
   );

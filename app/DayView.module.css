@@ -1,3 +1,10 @@
+.wrapper {
+  height: 80vh;
+  overflow-y: scroll;
+  border-radius: 1rem;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
+}
+
 .calendarView {
   display: flex;
 }
@@ -6,7 +13,7 @@
   display: grid;
   gap: 1px;
   background: var(--sub-alt-color);
-  width: 500px;
+  width: 100%;
   position: relative;
 }
 
@@ -42,4 +49,18 @@
   align-content: center;
   color: var(--sub-color);
   font-size: 12px;
+}
+
+.calendarEvent {
+  background: var(--main-color);
+  color: var(--background-color);
+  border-radius: 1rem;
+  padding: 1rem;
+  position: absolute;
+  width: 93%;
+  margin-left: 3%;
+}
+
+.calendarEvent h1 {
+  font-size: 1rem;
 }

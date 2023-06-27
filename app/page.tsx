@@ -1,4 +1,5 @@
 import DayView from "./DayView";
+import FocusTimer from "./FocusTimer";
 import styles from "./page.module.css";
 import { Event } from "@/utils/types";
 
@@ -21,6 +22,7 @@ export default function Home() {
   return (
     <main className={styles.main}>
       <DayView events={events} startTime={6} endTime={22} />
+      <FocusTimer />
     </main>
   );
 }

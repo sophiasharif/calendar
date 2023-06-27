@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { DndProvider, useDrop } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 import CalendarEvent from "./CalendarEvent";
@@ -62,6 +62,41 @@ function GridCell({ id, startTime, endTime, moveEvent }: GridCellProps) {
   );
 }
 
+function CurrentTimeIndicator({ startTime, endTime }: TimeColumnProps) {
+  const [timePosition, setTimePosition] = useState(0);
+
+  const updateTimePosition = () => {
+    const now = new Date();
+    if (now.getHours() < startTime || now.getHours() > endTime) {
+      return 0;
+    }
+
+    const hoursPassed = now.getHours() + now.getMinutes() / 60 - startTime;
+    const timePosition = (hoursPassed / (endTime - startTime)) * 100;
+    setTimePosition(timePosition);
+  };
+
+  useEffect(() => {
+    updateTimePosition(); // Call it immediately
+    const interval = setInterval(updateTimePosition, 60000); // Then every minute
+    return () => clearInterval(interval);
+  }, [startTime, endTime]);
+
+  return (
+    <div
+      style={{
+        opacity: timePosition === 0 ? 0 : 1,
+        position: "absolute",
+        top: `${timePosition}%`,
+        left: 0,
+        right: 0,
+        height: "2px",
+        backgroundColor: "red",
+      }}
+    />
+  );
+}
+
 function CalendarColumn({
   events,
   startTime,
@@ -94,6 +129,7 @@ function CalendarColumn({
           key={event.id}
         />
       ))}
+      <CurrentTimeIndicator startTime={startTime} endTime={endTime} />
     </div>
   );
 }
@@ -105,10 +141,15 @@ function TimeColumn({ startTime, endTime }: TimeColumnProps) {
   const gridStyling = {
     gridTemplateRows: `repeat(${numRows}, ${HOUR_HEIGHT + 3}px)`,
   };
+  function getTimeLabel(hour: number) {
+    if (hour === 12) return "12 PM";
+    else if (hour < 12) return `${hour} AM`;
+    else return `${hour - 12} PM`;
+  }
   return (
     <div className={styles.timeColumn} style={gridStyling}>
       {times.map((hour) => (
-        <div key={hour}>{hour < 12 ? `${hour} AM` : `${hour} PM`}</div>
+        <div key={hour}>{getTimeLabel(hour)}</div>
       ))}
     </div>
   );
@@ -123,7 +164,6 @@ export default function DayView({ events, startTime, endTime }: DayViewProps) {
       toUpdate.startTime.getHours() -
       toUpdate.startTime.getMinutes();
     const newEndHour = newStartHour + eventLength;
-    console.log(newEndHour);
 
     toUpdate.startTime.setHours(newStartHour);
     toUpdate.startTime.setMinutes((newStartHour % 1) * 60);

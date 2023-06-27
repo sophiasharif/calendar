@@ -20,7 +20,7 @@ const events: Event[] = [
 export default function Home() {
   return (
     <main className={styles.main}>
-      <DayView events={events} startTime={6} endTime={19} />
+      <DayView events={events} startTime={6} endTime={22} />
     </main>
   );
 }

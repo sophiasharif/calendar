@@ -40,8 +40,7 @@ function GridCell({ id, startTime, endTime, moveEvent }: GridCellProps) {
     startTime: number,
     endTime: number
   ) {
-    console.log(eventID);
-    moveEvent(eventID, startTime + cellID);
+    moveEvent(eventID, startTime + cellID / 4);
   }
 
   // drag and drop functionality
@@ -53,10 +52,11 @@ function GridCell({ id, startTime, endTime, moveEvent }: GridCellProps) {
       isOver: !!monitor.isOver(),
     }),
   }));
+
   return (
     <div
       ref={drop}
-      className={styles.gridCell}
+      className={id % 4 === 0 ? styles.gridCell : styles.gridCellNoLines}
       style={{ borderTop: isOver ? "3px solid white" : "0px" }}
     ></div>
   );
@@ -70,9 +70,9 @@ function CalendarColumn({
 }: CalendarColumnProps) {
   // array to hour grid lines
   const numRows = endTime - startTime;
-  const rows = new Array(numRows).fill(0);
+  const rows = new Array(numRows * 4).fill(0);
   const gridStyling = {
-    gridTemplateRows: `repeat(${numRows}, ${HOUR_HEIGHT}px)`,
+    gridTemplateRows: `repeat(${numRows * 4}, ${HOUR_HEIGHT / 4}px)`,
   };
 
   return (
@@ -103,7 +103,7 @@ function TimeColumn({ startTime, endTime }: TimeColumnProps) {
   const times = [];
   for (let hour = startTime; hour < endTime - 1; hour++, times.push(hour)); // populate times
   const gridStyling = {
-    gridTemplateRows: `repeat(${numRows}, ${HOUR_HEIGHT}px)`,
+    gridTemplateRows: `repeat(${numRows}, ${HOUR_HEIGHT + 3}px)`,
   };
   return (
     <div className={styles.timeColumn} style={gridStyling}>
@@ -117,9 +117,18 @@ function TimeColumn({ startTime, endTime }: TimeColumnProps) {
 export default function DayView({ events, startTime, endTime }: DayViewProps) {
   function moveEvent(id: number, newStartHour: number) {
     let toUpdate = events.filter((event) => event.id === id)[0];
-    const timeOffset = newStartHour - toUpdate.startTime.getHours();
+    const eventLength =
+      toUpdate.endTime.getHours() +
+      toUpdate.endTime.getMinutes() -
+      toUpdate.startTime.getHours() -
+      toUpdate.startTime.getMinutes();
+    const newEndHour = newStartHour + eventLength;
+    console.log(newEndHour);
+
     toUpdate.startTime.setHours(newStartHour);
-    toUpdate.endTime.setHours(timeOffset + toUpdate.endTime.getHours());
+    toUpdate.startTime.setMinutes((newStartHour % 1) * 60);
+    toUpdate.endTime.setHours(newStartHour + eventLength);
+    toUpdate.endTime.setMinutes((newEndHour % 1) * 60);
   }
 
   return (

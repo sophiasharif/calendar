@@ -33,14 +33,13 @@ export default function CalendarEvent({
   const style = {
     top: `${topOffset}%`,
     height: `${length}%`,
+    border: isDragging ? "3px solid white" : "0px",
+    pointerEvents: isDragging ? "none" : "auto",
+    opacity: isDragging ? 0.7 : 1,
   };
 
   return (
-    <div
-      className={styles.calendarEvent}
-      style={{ ...style, border: isDragging ? "3px solid white" : "0px" }}
-      ref={drag}
-    >
+    <div className={styles.calendarEvent} style={style} ref={drag}>
       <h1>{event.title}</h1>
       <h5>
         {eventStartHour} - {eventEndHour}
